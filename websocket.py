@@ -113,6 +113,7 @@ class WebSocketsHandler(SocketServer.StreamRequestHandler):
         num = message[0]
         t = top - 1 + max_num
         t = t % max_num
+        print t
         if num == '2':
             self.user_id = str(uuid.uuid1())
             top = (top + 1)
@@ -140,15 +141,15 @@ con = threading.Condition()
 
 top = 0
 end = 0
-max_num = 1000000
+max_num = 50000
 max_time = 1000
-id = [range(max_num)]
-matched = [(range(max_num))]
-next_link = [(range(max_num))]
-pre_link = [(range(max_num))]
-opponent_matched = [range(max_num)]
-timestamp = [range(max_num)]
-opponent_id = [range(mux_num)]
+id = range(max_num)
+matched = (range(max_num))
+next_link = (range(max_num))
+pre_link = (range(max_num))
+opponent_matched = range(max_num)
+timestamp = range(max_num)
+opponent_id = range(max_num)
 energy_list = [-1, -2, -4, -8, 0, -1, 0, 0, 1]
 result_list = [[2, 1, 1, 1, 2, 2, 0, 2, 0],
                [0, 2, 1, 1, 2, 2, 0, 2, 0],
