@@ -88,7 +88,7 @@ class WebSocketsHandler(SocketServer.StreamRequestHandler):
             opponent_id[end] = id[top]
             opponent = id[end]
             end = next_link[end]
-            con.notify_all()
+            con.notify()
             return opponent
         elif matched[top] == 0:
             con.wait()
@@ -98,7 +98,7 @@ class WebSocketsHandler(SocketServer.StreamRequestHandler):
                 else:
                     con.wait()
             con.release()
-            time.sleep(0.0001)
+            time.sleep(1)
 
         elif matched[top] == 1:
             return opponent_id[top]
