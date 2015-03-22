@@ -79,29 +79,33 @@ class WebSocketsHandler(SocketServer.StreamRequestHandler):
             end = next_link[end]
         while matched[end] == 1:
             end = next_link[end]
-        if top != end:
-            matched[end] = 1
-            opponent_id[top] = id[end]
-            pre_link[next_link[top]] = pre_link[top]
-            next_link[pre_link[top]] = next_link[top]
-            opponent_matched[end] = 1
-            opponent_id[end] = id[top]
-            opponent = id[end]
-            end = next_link[end]
-            con.notify()
-            return opponent
-        elif matched[top] == 0:
-            con.wait()
-            if con.acquire():
+        if con.acquire():
+            if top != end:
+                matched[end] = 1
+                opponent_id[top] = id[end]
+                pre_link[next_link[top]] = pre_link[top]
+                next_link[pre_link[top]] = next_link[top]
+                opponent_matched[end] = 1
+                opponent_id[end] = id[top]
+                opponent = id[end]
+                end = next_link[end]
+                con.notify()
+                con.release()
+                time.sleep(1)
+                return opponent
+            elif matched[top] == 0:
+                con.wait()
                 if matched[top] == 1:
+                    con.release()
+                    time.sleep(1)
                     return opponent_id[top]
                 else:
                     con.wait()
-            con.release()
-            time.sleep(1)
 
-        elif matched[top] == 1:
-            return opponent_id[top]
+            elif matched[top] == 1:
+                con.release()
+                time.sleep(1)
+                return opponent_id[top]
 
     def on_message(self, message):
         """
